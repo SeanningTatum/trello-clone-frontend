@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+
 import Head from '../components/head'
 import Nav from '../components/nav'
 
@@ -27,8 +28,7 @@ const Home = () => (
           <a className="card">
             <h3>Examples &rarr;</h3>
             <p>
-              Find other example boilerplates on the{' '}
-              <code>create-next-app</code> site
+              Find other example boilerplates on the <code>create-next-app</code> site
             </p>
           </a>
         </Link>
