@@ -17,7 +17,7 @@ export default function Boards() {
           <Col md={9}>
             <h5>Personal Boards</h5>
             <Row className="justify-space-between">
-              <BoardList boards={[1, 2, 3, 4]} />
+              <BoardList boards={[1, 2, 3, 4, 5]} />
             </Row>
           </Col>
         </Row>
