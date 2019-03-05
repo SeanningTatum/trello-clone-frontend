@@ -123,6 +123,9 @@ export default function Board() {
     setBoard(newBoard)
   }
 
+  /**
+   * Function that adds a task any column
+   */
   function onAddTask(taskContent: string, columnId: string) {
     setAddCardId('')
 
@@ -144,6 +147,24 @@ export default function Board() {
     setBoard(newBoard)
   }
 
+  /**
+   * Function that adds a column to the end of
+   * the column object
+   */
+  function addColumn(columnName: string) {
+    const newBoard = {...board}
+
+    const columnId = new Date().toString()
+
+    const newColumns = {...newBoard.columns}
+    newColumns[columnId] = {id: columnId, title: columnName, taskIds: []}
+
+    newBoard.columns = newColumns
+    newBoard.columnOrder = [...newBoard.columnOrder, columnId]
+
+    setBoard(newBoard)
+  }
+
   return (
     <div>
       <Navbar />
@@ -152,7 +173,7 @@ export default function Board() {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="all-columns" direction="horizontal" type="column">
             {provided => (
-              <ColumnContainer {...provided.droppableProps} ref={provided.innerRef}>
+              <BoardContainer {...provided.droppableProps} ref={provided.innerRef}>
                 {board.columnOrder.map((columnId, ndx) => {
                   const column = board.columns[columnId]
                   const tasks = column.taskIds.map(taskId => board.tasks[taskId])
@@ -169,8 +190,9 @@ export default function Board() {
                     />
                   )
                 })}
+
                 {provided.placeholder}
-              </ColumnContainer>
+              </BoardContainer>
             )}
           </Droppable>
         </DragDropContext>
@@ -179,7 +201,6 @@ export default function Board() {
   )
 }
 
-const ColumnContainer = styled.div`
+const BoardContainer = styled.div`
   display: flex;
-  z-index: -1;
 `

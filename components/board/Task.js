@@ -34,7 +34,8 @@ export default memo<Props>(({task, ndx}: Props) => {
 
 const TaskItem = styled.div`
   userselect: 'none';
-  padding: 16px;
+  padding: 8px;
   margin-bottom: 8px;
   background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
+  border-radius: 3px;
 `
