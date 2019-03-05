@@ -13,13 +13,15 @@ import {
   DropdownItem,
 } from 'reactstrap'
 
-export default function Navbar() {
+export default function Navbar(props) {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggle = () => setIsOpen(!isOpen)
 
+  const backgroundColor = props.transparent ? 'rgba(0,0,0,.35)' : '#026aa7'
+
   return (
-    <BSNavbar dark expand="md" style={{height: '40px', backgroundColor: '#026aa7', color: 'white'}}>
+    <BSNavbar dark expand="md" style={{height: '40px', backgroundColor, color: 'white'}}>
       <NavbarBrand href="/">Trello Clone</NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>

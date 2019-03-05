@@ -38,6 +38,7 @@ export default function Board() {
   const [addCardId, setAddCardId] = useState()
   const [addingColumn, setAddingColumn] = useState(false)
   const {setValue: setColumnInput, ...columnInput} = useFormInput('')
+
   /**
    * Helper function that reorders array elements
    */
@@ -171,7 +172,7 @@ export default function Board() {
 
   return (
     <AppContainer>
-      <Navbar />
+      <Navbar transparent />
       <NavTitleAndActions />
       <Container fluid className="pt-4" style={{flex: 1}}>
         <DragDropContext onDragEnd={onDragEnd}>
