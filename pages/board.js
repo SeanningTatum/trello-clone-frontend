@@ -198,7 +198,7 @@ export default function Board() {
 
                 {provided.placeholder}
 
-                <AddColumn>
+                <AddColumn addingColumn={addingColumn}>
                   {!addingColumn ? (
                     <AddColumnPlaceholder onClick={() => setAddingColumn(true)}>
                       + Add another list
@@ -227,6 +227,7 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #026aa7;
 `
 
 const BoardContainer = styled.div`
@@ -241,9 +242,8 @@ const AddColumn = styled.div`
   border-radius: 3px;
   height: auto;
   min-height: 32px;
-  padding: 4px;
-  transition: background 85ms ease-in, opacity 40ms ease-in, border-color 85ms ease-in;
-  background-color: rgba(0, 0, 0, 0.24);
+  padding: 4px 8px;
+  background-color: ${props => (props.addingColumn ? '#dfe3e6' : 'rgba(0, 0, 0, 0.24)')};
   cursor: pointer;
   color: #fff;
   height: fit-content;
