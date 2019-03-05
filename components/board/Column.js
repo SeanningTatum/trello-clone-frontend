@@ -2,7 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import {Droppable} from 'react-beautiful-dnd'
+import {Droppable, Draggable} from 'react-beautiful-dnd'
 
 import Task from './Task'
 
@@ -14,28 +14,33 @@ type Props = {
   column: {
     id: string,
     title: string,
-    tasksIds: Array<string>,
+    taskIds: Array<string>,
   },
+  ndx: number,
 }
-export default function Column({tasks, column}: Props) {
+export default function Column({tasks, column, ndx}: Props) {
   return (
-    <ColumnContainer>
-      <h5>{column.title}</h5>
-      <Droppable droppableId={column.id}>
-        {(provided, snapshot) => (
-          <TaskListContainer
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
-          >
-            {tasks.map((task, ndx) => (
-              <Task task={task} ndx={ndx} key={task.id} />
-            ))}
-            {provided.placeholder}
-          </TaskListContainer>
-        )}
-      </Droppable>
-    </ColumnContainer>
+    <Draggable draggableId={column.id} index={ndx}>
+      {provided => (
+        <ColumnContainer {...provided.draggableProps} ref={provided.innerRef}>
+          <h5 {...provided.dragHandleProps}>{column.title}</h5>
+          <Droppable droppableId={column.id} type="task">
+            {(provided, snapshot) => (
+              <TaskListContainer
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {tasks.map((task, ndx) => (
+                  <Task task={task} ndx={ndx} key={task.id} />
+                ))}
+                {provided.placeholder}
+              </TaskListContainer>
+            )}
+          </Droppable>
+        </ColumnContainer>
+      )}
+    </Draggable>
   )
 }
 

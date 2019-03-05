@@ -5,7 +5,6 @@ import {Container} from 'reactstrap'
 import styled from 'styled-components'
 import {type DropResult, DragDropContext, Droppable} from 'react-beautiful-dnd'
 
-import {type BoardItem} from '../interfaces/BoardItem'
 import Navbar from '../components/dashboard/Navbar'
 import NavTitleAndActions from '../components/board/NavTitleAndActions'
 import Column from '../components/board/Column'
@@ -66,10 +65,21 @@ export default function Board() {
   }
 
   function onDragEnd(result: DropResult) {
-    const {destination, source} = result
+    const {destination, source, type} = result
 
     // dropped outside the list
     if (!destination) {
+      return
+    }
+
+    // If we're moving the columns
+    if (type === 'column') {
+      const newColumnOrder = reorder(board.columnOrder, source.index, destination.index)
+
+      const newBoard = {...board}
+      newBoard.columnOrder = newColumnOrder
+      setBoard(newBoard)
+
       return
     }
 
@@ -116,14 +126,19 @@ export default function Board() {
       <Container fluid>
         <h5>Things</h5>
         <DragDropContext onDragEnd={onDragEnd}>
-          <ColumnContainer>
-            {board.columnOrder.map(columnId => {
-              const column = board.columns[columnId]
-              const tasks = column.taskIds.map(taskId => board.tasks[taskId])
+          <Droppable droppableId="all-columns" direction="horizontal" type="column">
+            {provided => (
+              <ColumnContainer {...provided.droppableProps} ref={provided.innerRef}>
+                {board.columnOrder.map((columnId, ndx) => {
+                  const column = board.columns[columnId]
+                  const tasks = column.taskIds.map(taskId => board.tasks[taskId])
 
-              return <Column tasks={tasks} column={column} key={columnId} />
-            })}
-          </ColumnContainer>
+                  return <Column tasks={tasks} column={column} key={columnId} ndx={ndx} />
+                })}
+                {provided.placeholder}
+              </ColumnContainer>
+            )}
+          </Droppable>
         </DragDropContext>
       </Container>
     </div>
