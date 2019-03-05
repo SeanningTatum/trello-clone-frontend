@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {Draggable} from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
-export default function Task({task, ndx}) {
+export default memo(({task, ndx}) => {
+  console.log(`[TaskID ${task.id} updated]`)
+
   return (
     <Draggable draggableId={task.id} index={ndx}>
       {provided => (
@@ -17,7 +19,7 @@ export default function Task({task, ndx}) {
       )}
     </Draggable>
   )
-}
+})
 
 const TaskItem = styled.div`
   userselect: 'none';

@@ -29,16 +29,76 @@ const sampleBoardData = {
     },
   },
 
-  columnOrder: ['column-1'],
+  columnOrder: ['column-1', 'column-2'],
 }
 
 export default function Board() {
   const [board, setBoard] = useState(sampleBoardData)
 
-  console.log(board)
+  function reorder(array, startIndex, endIndex) {
+    const result = Array.from(array)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
+
+    return result
+  }
+
+  function move(source, destination, droppableSource, droppableDestination) {
+    const sourceClone = Array.from(source)
+    const destClone = Array.from(destination)
+
+    // Remove item
+    const [removed] = sourceClone.splice(droppableSource.index, 1)
+
+    // Add the removed item to the destination
+    destClone.splice(droppableDestination.index, 0, removed)
+
+    // Return the updated columns
+    const newColumns = {...board.columns}
+    newColumns[droppableSource.droppableId].taskIds = sourceClone
+    newColumns[droppableDestination.droppableId].taskIds = destClone
+
+    return newColumns
+  }
 
   function onDragEnd(result: DropResult) {
-    // TODO:
+    const {destination, source} = result
+
+    // dropped outside the list
+    if (!destination) {
+      return
+    }
+
+    // If user put dropped the task on the same list
+    if (destination.droppableId === source.droppableId) {
+      const newTaskIds = reorder(
+        board.columns[destination.droppableId].taskIds,
+        source.index,
+        destination.index
+      )
+
+      const newBoard = {...board}
+
+      newBoard.columns[source.droppableId] = {
+        ...newBoard.columns[source.droppableId],
+        taskIds: newTaskIds,
+      }
+
+      setBoard(newBoard)
+    } else {
+      // User dropped task on another list
+      const newColumns = move(
+        board.columns[source.droppableId].taskIds,
+        board.columns[destination.droppableId].taskIds,
+        source,
+        destination
+      )
+
+      const newBoard = {...board}
+      newBoard.columns = newColumns
+
+      setBoard(newBoard)
+    }
   }
 
   return (
