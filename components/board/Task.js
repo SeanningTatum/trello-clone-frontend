@@ -36,5 +36,5 @@ const TaskItem = styled.div`
   userselect: 'none';
   padding: 16px;
   margin-bottom: 8px;
-  background-color: ${props => (props.isDragging ? 'lightgreen' : 'grey')};
+  background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
 `

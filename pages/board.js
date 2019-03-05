@@ -34,11 +34,12 @@ const sampleBoardData = {
 
 export default function Board() {
   const [board, setBoard] = useState(sampleBoardData)
+  const [addCardId, setAddCardId] = useState()
 
   /**
    * Helper function that reorders array elements
    */
-  function reorder(array, startIndex, endIndex) {
+  function reorder(array, startIndex, endIndex): Array<any> {
     const result = Array.from(array)
     const [removed] = result.splice(startIndex, 1)
     result.splice(endIndex, 0, removed)
@@ -47,7 +48,7 @@ export default function Board() {
   }
 
   /**
-   * helper function that moves one task card to another list
+   * Helper function that moves one task card to another list
    */
   function move(source, destination, droppableSource, droppableDestination) {
     const sourceClone = Array.from(source)
@@ -67,6 +68,10 @@ export default function Board() {
     return newColumns
   }
 
+  /**
+   * Function that handles all drag related stuff
+   * eg. moving columns / cards around
+   */
   function onDragEnd(result: DropResult) {
     const {destination, source, type} = result
 
@@ -86,6 +91,7 @@ export default function Board() {
       return
     }
 
+    // If we're rearranging the tasks
     // If user put dropped the task on the same list
     if (destination.droppableId === source.droppableId) {
       const newTaskIds = reorder(
@@ -117,12 +123,32 @@ export default function Board() {
     setBoard(newBoard)
   }
 
+  function onAddTask(taskContent: string, columnId: string) {
+    setAddCardId('')
+
+    const newBoard = {...board}
+    const newId = new Date().toString()
+
+    const newTasks = {...newBoard.tasks}
+    const newColumn = {...newBoard.columns[columnId]}
+
+    // Create new task object
+    newTasks[newId] = {id: newId, content: taskContent}
+    // Add taskId to taskId array
+    newColumn.taskIds = [...newColumn.taskIds, newId]
+
+    // Update board with the new taskId and new task
+    newBoard.tasks = newTasks
+    newBoard.columns = {...newBoard.columns, [columnId]: newColumn}
+
+    setBoard(newBoard)
+  }
+
   return (
     <div>
       <Navbar />
       <NavTitleAndActions />
-      <Container fluid>
-        <h5>Things</h5>
+      <Container fluid className="pt-4">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="all-columns" direction="horizontal" type="column">
             {provided => (
@@ -131,7 +157,17 @@ export default function Board() {
                   const column = board.columns[columnId]
                   const tasks = column.taskIds.map(taskId => board.tasks[taskId])
 
-                  return <Column tasks={tasks} column={column} key={columnId} ndx={ndx} />
+                  return (
+                    <Column
+                      tasks={tasks}
+                      column={column}
+                      key={columnId}
+                      ndx={ndx}
+                      onAddCardPressed={() => setAddCardId(columnId)}
+                      isAddCardActive={addCardId === columnId}
+                      addTask={onAddTask}
+                    />
+                  )
                 })}
                 {provided.placeholder}
               </ColumnContainer>
@@ -145,4 +181,5 @@ export default function Board() {
 
 const ColumnContainer = styled.div`
   display: flex;
+  z-index: -1;
 `
