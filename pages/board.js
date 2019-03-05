@@ -1,13 +1,14 @@
 // @flow
 
 import React, {useState} from 'react'
-import {Container} from 'reactstrap'
+import {Container, Input, Button} from 'reactstrap'
 import styled from 'styled-components'
 import {type DropResult, DragDropContext, Droppable} from 'react-beautiful-dnd'
 
 import Navbar from '../components/dashboard/Navbar'
 import NavTitleAndActions from '../components/board/NavTitleAndActions'
 import Column from '../components/board/Column'
+import useFormInput from '../hooks/useFormInput'
 
 const sampleBoardData = {
   tasks: {
@@ -35,7 +36,8 @@ const sampleBoardData = {
 export default function Board() {
   const [board, setBoard] = useState(sampleBoardData)
   const [addCardId, setAddCardId] = useState()
-
+  const [addingColumn, setAddingColumn] = useState(false)
+  const {setValue: setColumnInput, ...columnInput} = useFormInput('')
   /**
    * Helper function that reorders array elements
    */
@@ -151,25 +153,27 @@ export default function Board() {
    * Function that adds a column to the end of
    * the column object
    */
-  function addColumn(columnName: string) {
+  function onAddColumn() {
+    setAddingColumn(false)
     const newBoard = {...board}
 
     const columnId = new Date().toString()
 
     const newColumns = {...newBoard.columns}
-    newColumns[columnId] = {id: columnId, title: columnName, taskIds: []}
+    newColumns[columnId] = {id: columnId, title: columnInput.value, taskIds: []}
 
     newBoard.columns = newColumns
     newBoard.columnOrder = [...newBoard.columnOrder, columnId]
 
+    setColumnInput('')
     setBoard(newBoard)
   }
 
   return (
-    <div>
+    <AppContainer>
       <Navbar />
       <NavTitleAndActions />
-      <Container fluid className="pt-4">
+      <Container fluid className="pt-4" style={{flex: 1}}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="all-columns" direction="horizontal" type="column">
             {provided => (
@@ -192,15 +196,59 @@ export default function Board() {
                 })}
 
                 {provided.placeholder}
+
+                <AddColumn>
+                  {!addingColumn ? (
+                    <AddColumnPlaceholder onClick={() => setAddingColumn(true)}>
+                      + Add another list
+                    </AddColumnPlaceholder>
+                  ) : (
+                    <>
+                      <Input placeholder="Enter list title..." {...columnInput} />
+                      <div className="mt-2">
+                        <Button color="success" size="sm" onClick={onAddColumn}>
+                          Add List
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </AddColumn>
               </BoardContainer>
             )}
           </Droppable>
         </DragDropContext>
       </Container>
-    </div>
+    </AppContainer>
   )
 }
 
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`
+
 const BoardContainer = styled.div`
   display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  background-color: transparent;
+  height: 100%;
+`
+
+const AddColumn = styled.div`
+  border-radius: 3px;
+  height: auto;
+  min-height: 32px;
+  padding: 4px;
+  transition: background 85ms ease-in, opacity 40ms ease-in, border-color 85ms ease-in;
+  background-color: rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  color: #fff;
+  height: fit-content;
+  min-width: 250px;
+`
+
+const AddColumnPlaceholder = styled.span`
+  padding: 6px 8px;
 `

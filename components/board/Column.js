@@ -1,6 +1,6 @@
 // @flow
 
-import React, {memo} from 'react'
+import React, {memo, useRef} from 'react'
 import {Input, Button} from 'reactstrap'
 import styled from 'styled-components'
 import {Droppable, Draggable} from 'react-beautiful-dnd'
@@ -65,7 +65,7 @@ export default memo<Props>((props: Props) => {
                   <AddCardContainer>
                     <AddCardInput placeholder="Enter a title for this card" {...taskInput} />
                     <div className="text-right">
-                      <Button color="success" onClick={onClickAddTask} type="button">
+                      <Button color="success" onClick={onClickAddTask} type="button" size="sm">
                         Add Task
                       </Button>
                     </div>
@@ -81,7 +81,8 @@ export default memo<Props>((props: Props) => {
 })
 
 const ColumnContainer = styled.div`
-  width: 250px;
+  flex: 0 0 auto;
+  min-width: 250px;
   padding: 6px;
   margin-right: 10px;
   background-color: ${props => (props.isDraggingOver ? 'lightblue' : '#dfe3e6')};
@@ -106,7 +107,6 @@ const TaskListContainer = styled.div`
 const AddCardText = styled.p`
   cursor: pointer;
   margin-bottom: 0px;
-  z-index: 100;
 `
 
 const AddCardContainer = styled.div`
