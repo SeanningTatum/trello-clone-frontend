@@ -42,9 +42,10 @@ export default function Column({tasks, column}: Props) {
 const ColumnContainer = styled.div`
   width: 250px;
   padding: 8px;
-  background-color: ${props => (props.isDraggingOver ? 'lightblue' : 'lightgrey')};
+  margin-right: 10px;
 `
 
 const TaskListContainer = styled.div`
   padding: 8px;
+  background-color: ${props => (props.isDraggingOver ? 'lightblue' : 'lightgrey')};
 `

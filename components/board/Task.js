@@ -7,12 +7,13 @@ export default memo(({task, ndx}) => {
 
   return (
     <Draggable draggableId={task.id} index={ndx}>
-      {provided => (
+      {(provided, snapshot) => (
         <TaskItem
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={provided.draggableProps.style}
           ref={provided.innerRef}
+          isDragging={snapshot.isDragging}
         >
           {task.content}
         </TaskItem>

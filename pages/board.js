@@ -2,7 +2,8 @@
 
 import React, {useState} from 'react'
 import {Container} from 'reactstrap'
-import {type DropResult, DragDropContext} from 'react-beautiful-dnd'
+import styled from 'styled-components'
+import {type DropResult, DragDropContext, Droppable} from 'react-beautiful-dnd'
 
 import {type BoardItem} from '../interfaces/BoardItem'
 import Navbar from '../components/dashboard/Navbar'
@@ -43,6 +44,9 @@ export default function Board() {
     return result
   }
 
+  /**
+   * Moves one task card to another list
+   */
   function move(source, destination, droppableSource, droppableDestination) {
     const sourceClone = Array.from(source)
     const destClone = Array.from(destination)
@@ -79,6 +83,7 @@ export default function Board() {
 
       const newBoard = {...board}
 
+      // Update board with new column
       newBoard.columns[source.droppableId] = {
         ...newBoard.columns[source.droppableId],
         taskIds: newTaskIds,
@@ -87,6 +92,8 @@ export default function Board() {
       setBoard(newBoard)
     } else {
       // User dropped task on another list
+
+      // Get new columns from moving the list to another
       const newColumns = move(
         board.columns[source.droppableId].taskIds,
         board.columns[destination.droppableId].taskIds,
@@ -94,6 +101,7 @@ export default function Board() {
         destination
       )
 
+      // Update board
       const newBoard = {...board}
       newBoard.columns = newColumns
 
@@ -108,14 +116,20 @@ export default function Board() {
       <Container fluid>
         <h5>Things</h5>
         <DragDropContext onDragEnd={onDragEnd}>
-          {board.columnOrder.map(columnId => {
-            const column = board.columns[columnId]
-            const tasks = column.taskIds.map(taskId => board.tasks[taskId])
+          <ColumnContainer>
+            {board.columnOrder.map(columnId => {
+              const column = board.columns[columnId]
+              const tasks = column.taskIds.map(taskId => board.tasks[taskId])
 
-            return <Column tasks={tasks} column={column} key={columnId} />
-          })}
+              return <Column tasks={tasks} column={column} key={columnId} />
+            })}
+          </ColumnContainer>
         </DragDropContext>
       </Container>
     </div>
   )
 }
+
+const ColumnContainer = styled.div`
+  display: flex;
+`
