@@ -1,8 +1,18 @@
+// @flow
+
 import React, {memo} from 'react'
 import {Draggable} from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
-export default memo(({task, ndx}) => {
+type Props = {
+  task: {
+    id: string,
+    content: string,
+  },
+  ndx: number,
+}
+
+export default memo<Props>(({task, ndx}: Props) => {
   console.log(`[TaskID ${task.id} updated]`)
 
   return (

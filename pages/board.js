@@ -35,6 +35,9 @@ const sampleBoardData = {
 export default function Board() {
   const [board, setBoard] = useState(sampleBoardData)
 
+  /**
+   * Helper function that reorders array elements
+   */
   function reorder(array, startIndex, endIndex) {
     const result = Array.from(array)
     const [removed] = result.splice(startIndex, 1)
@@ -44,7 +47,7 @@ export default function Board() {
   }
 
   /**
-   * Moves one task card to another list
+   * helper function that moves one task card to another list
    */
   function move(source, destination, droppableSource, droppableDestination) {
     const sourceClone = Array.from(source)
@@ -72,14 +75,14 @@ export default function Board() {
       return
     }
 
-    // If we're moving the columns
+    const newBoard = {...board}
+
+    // If we're rearranging the columns
     if (type === 'column') {
       const newColumnOrder = reorder(board.columnOrder, source.index, destination.index)
 
-      const newBoard = {...board}
       newBoard.columnOrder = newColumnOrder
       setBoard(newBoard)
-
       return
     }
 
@@ -91,15 +94,11 @@ export default function Board() {
         destination.index
       )
 
-      const newBoard = {...board}
-
-      // Update board with new column
+      // Update newBoard with newly arranged column
       newBoard.columns[source.droppableId] = {
         ...newBoard.columns[source.droppableId],
         taskIds: newTaskIds,
       }
-
-      setBoard(newBoard)
     } else {
       // User dropped task on another list
 
@@ -111,12 +110,11 @@ export default function Board() {
         destination
       )
 
-      // Update board
-      const newBoard = {...board}
+      // Update newBoard with
       newBoard.columns = newColumns
-
-      setBoard(newBoard)
     }
+    // Update board
+    setBoard(newBoard)
   }
 
   return (
