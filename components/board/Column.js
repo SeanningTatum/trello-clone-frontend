@@ -1,6 +1,6 @@
 // @flow
 
-import React, {memo, useRef} from 'react'
+import React, {memo} from 'react'
 import {Input, Button} from 'reactstrap'
 import styled from 'styled-components'
 import {Droppable, Draggable} from 'react-beautiful-dnd'
@@ -25,6 +25,10 @@ type Props = {
   addTask: (taskContent: string, columnId: string) => void,
 }
 export default memo<Props>((props: Props) => {
+  // Prove that column does not have useless re-renders
+
+  console.log(`[Column ${props.column.id} updated]`, props.column)
+
   const {tasks, column, ndx} = props
 
   const {setValue: setTaskValue, ...taskInput} = useFormInput('')

@@ -21,6 +21,7 @@ module.exports = {
   ],
   rules: {
     "jsx-a11y/anchor-is-valid": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/destructuring-assignment": "off"
   },
 };

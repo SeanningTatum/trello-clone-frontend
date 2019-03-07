@@ -13,6 +13,7 @@ type Props = {
 }
 
 export default memo<Props>(({task, ndx}: Props) => {
+  // Prove that task does not have useless re-renders
   console.log(`[TaskID ${task.id} updated]`)
 
   return (

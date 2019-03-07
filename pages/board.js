@@ -1,14 +1,14 @@
 // @flow
 
 import React, {useState} from 'react'
-import {Container, Input, Button} from 'reactstrap'
+import {Container} from 'reactstrap'
 import styled from 'styled-components'
 import {type DropResult, DragDropContext, Droppable} from 'react-beautiful-dnd'
 
 import Navbar from '../components/dashboard/Navbar'
 import NavTitleAndActions from '../components/board/NavTitleAndActions'
 import Column from '../components/board/Column'
-import useFormInput from '../hooks/useFormInput'
+import AddColumn from '../components/board/AddColumn'
 
 const sampleBoardData = {
   tasks: {
@@ -17,6 +17,7 @@ const sampleBoardData = {
     'task-3': {id: 'task-3', content: 'Lmao'},
     'task-4': {id: 'task-4', content: 'Nani'},
   },
+
   columns: {
     'column-1': {
       id: 'column-1',
@@ -37,7 +38,6 @@ export default function Board() {
   const [board, setBoard] = useState(sampleBoardData)
   const [addCardId, setAddCardId] = useState()
   const [addingColumn, setAddingColumn] = useState(false)
-  const {setValue: setColumnInput, ...columnInput} = useFormInput('')
 
   /**
    * Helper function that reorders array elements
@@ -85,7 +85,9 @@ export default function Board() {
 
     const newBoard = {...board}
 
-    // If we're rearranging the columns
+    /**
+     * Handle arrangement for columns
+     */
     if (type === 'column') {
       const newColumnOrder = reorder(board.columnOrder, source.index, destination.index)
 
@@ -94,16 +96,20 @@ export default function Board() {
       return
     }
 
-    // If we're rearranging the tasks
+    /**
+     * Handle arrangement of tasks
+     */
+
     // If user put dropped the task on the same list
     if (destination.droppableId === source.droppableId) {
+      // Update the arrangement of the tasks ids
       const newTaskIds = reorder(
-        board.columns[destination.droppableId].taskIds,
+        newBoard.columns[destination.droppableId].taskIds,
         source.index,
         destination.index
       )
 
-      // Update newBoard with newly arranged column
+      // Update specific column with arrangement of the task ids
       newBoard.columns[source.droppableId] = {
         ...newBoard.columns[source.droppableId],
         taskIds: newTaskIds,
@@ -111,7 +117,7 @@ export default function Board() {
     } else {
       // User dropped task on another list
 
-      // Get new columns from moving the list to another
+      // Move task from one column to another
       const newColumns = move(
         board.columns[source.droppableId].taskIds,
         board.columns[destination.droppableId].taskIds,
@@ -119,10 +125,10 @@ export default function Board() {
         destination
       )
 
-      // Update newBoard with
+      // Update newBoard columns with the rearranged tasks
       newBoard.columns = newColumns
     }
-    // Update board
+
     setBoard(newBoard)
   }
 
@@ -154,19 +160,20 @@ export default function Board() {
    * Function that adds a column to the end of
    * the column object
    */
-  function onAddColumn() {
+  function onAddColumn(columnName: string) {
     setAddingColumn(false)
     const newBoard = {...board}
 
     const columnId = new Date().toString()
 
     const newColumns = {...newBoard.columns}
-    newColumns[columnId] = {id: columnId, title: columnInput.value, taskIds: []}
+
+    // Create new column
+    newColumns[columnId] = {id: columnId, title: columnName, taskIds: []}
 
     newBoard.columns = newColumns
     newBoard.columnOrder = [...newBoard.columnOrder, columnId]
 
-    setColumnInput('')
     setBoard(newBoard)
   }
 
@@ -198,22 +205,11 @@ export default function Board() {
 
                 {provided.placeholder}
 
-                <AddColumn addingColumn={addingColumn}>
-                  {!addingColumn ? (
-                    <AddColumnPlaceholder onClick={() => setAddingColumn(true)}>
-                      + Add another list
-                    </AddColumnPlaceholder>
-                  ) : (
-                    <>
-                      <Input placeholder="Enter list title..." {...columnInput} />
-                      <div className="mt-2">
-                        <Button color="success" size="sm" onClick={onAddColumn}>
-                          Add List
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </AddColumn>
+                <AddColumn
+                  addingColumn={addingColumn}
+                  onAddListClicked={() => setAddingColumn(true)}
+                  onAddColumn={onAddColumn}
+                />
               </BoardContainer>
             )}
           </Droppable>
@@ -236,20 +232,4 @@ const BoardContainer = styled.div`
   overflow-x: auto;
   background-color: transparent;
   height: 100%;
-`
-
-const AddColumn = styled.div`
-  border-radius: 3px;
-  height: auto;
-  min-height: 32px;
-  padding: 4px 8px;
-  background-color: ${props => (props.addingColumn ? '#dfe3e6' : 'rgba(0, 0, 0, 0.24)')};
-  cursor: pointer;
-  color: #fff;
-  height: fit-content;
-  min-width: 250px;
-`
-
-const AddColumnPlaceholder = styled.span`
-  padding: 6px 8px;
 `
