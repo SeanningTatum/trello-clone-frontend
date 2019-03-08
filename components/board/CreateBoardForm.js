@@ -16,7 +16,7 @@ const COLORS = [
   'rgb(131, 140, 145)',
 ]
 
-export default function CreateBoardForm() {
+export default function CreateBoardForm({onCreateBoardClicked}) {
   const [currentBg, setCurrentBg] = useState(COLORS[0])
   const {setValue: setBoardName, ...boardName} = useFormInput('')
 
@@ -53,6 +53,7 @@ export default function CreateBoardForm() {
           borderColor: boardName.value === '' && 'rgba(9, 45, 66, 1)',
         }}
         disabled={boardName.value === ''}
+        onClick={() => onCreateBoardClicked(boardName.value, currentBg)}
       >
         <span>Create Board</span>
       </Button>

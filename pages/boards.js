@@ -1,5 +1,4 @@
 // @flow
-
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import {Container, Row, Col, Modal} from 'reactstrap'
@@ -9,8 +8,39 @@ import Sidenav from '../components/dashboard/Sidenav'
 import BoardList from '../components/dashboard/BoardList'
 import CreateBoardForm from '../components/board/CreateBoardForm'
 
+const createBoard = (boardName: string, color: string = 'rgb(0, 121, 191)') => ({
+  name: boardName,
+  color,
+
+  tasks: {
+    'task-1': {id: 'task-1', content: 'Take out the garbage 1'},
+    'task-2': {id: 'task-2', content: 'Imong mama'},
+    'task-3': {id: 'task-3', content: 'Lmao'},
+    'task-4': {id: 'task-4', content: 'Nani'},
+  },
+
+  columns: {
+    'column-1': {
+      id: 'column-1',
+      title: 'Todo',
+      taskIds: ['task-1', 'task-2'],
+    },
+    'column-2': {
+      id: 'column-2',
+      title: 'Another todo',
+      taskIds: ['task-3', 'task-4'],
+    },
+  },
+
+  columnOrder: ['column-1', 'column-2'],
+})
+
+const mockBoards = [createBoard('board 1'), createBoard('board 2'), createBoard('board 3')]
+
 export default function Boards() {
   const [isModalOpen: boolean, setIsModalOpen] = useState(false)
+  const [boards, setBoards] = useState(mockBoards)
+  // Mock board data
 
   function onCreateNewBoardClicked() {
     setIsModalOpen(true)
@@ -18,6 +48,12 @@ export default function Boards() {
 
   function toggleModal() {
     setIsModalOpen(!isModalOpen)
+  }
+
+  function onCreateBoard(boardName: string, color: string) {
+    const newBoard = createBoard(boardName, color)
+    setBoards([...boards, newBoard])
+    setIsModalOpen(false)
   }
 
   return (
@@ -31,7 +67,7 @@ export default function Boards() {
           <Col md={9}>
             <h5>Personal Boards</h5>
             <Row className="justify-space-between">
-              <BoardList boards={[1, 2, 3, 4, 5]} />
+              <BoardList boards={boards} />
               <Col md={3}>
                 <CreateBoardBox className="py-3" onClick={onCreateNewBoardClicked}>
                   <p className="mb-0">Create new board...</p>
@@ -48,7 +84,7 @@ export default function Boards() {
           contentClassName="modalContent"
           backdropClassName="backdrop"
         >
-          <CreateBoardForm />
+          <CreateBoardForm onCreateBoardClicked={onCreateBoard} />
         </StyledModal>
       </Container>
 

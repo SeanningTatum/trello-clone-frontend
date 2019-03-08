@@ -6,12 +6,12 @@ import {Col} from 'reactstrap'
 import Link from 'next/link'
 
 export default function BoardList({boards}) {
-  return boards.map(num => (
-    <Col md={3} className="mb-3" key={num}>
+  return boards.map((board, ndx) => (
+    <Col md={3} className="mb-3" key={ndx}>
       <Link href="/board">
-        <Box className="px-2">
+        <Box className="px-2" style={{backgroundColor: board.color}}>
           <BoxContainer>
-            <p className="mb-0">Box {num}</p>
+            <p className="mb-0">{board.name}</p>
           </BoxContainer>
         </Box>
       </Link>
