@@ -35,12 +35,12 @@ const createBoard = (boardName: string, color: string = 'rgb(0, 121, 191)') => (
   columnOrder: ['column-1', 'column-2'],
 })
 
+// Mock board data
 const mockBoards = [createBoard('board 1'), createBoard('board 2'), createBoard('board 3')]
 
 export default function Boards() {
   const [isModalOpen: boolean, setIsModalOpen] = useState(false)
   const [boards, setBoards] = useState(mockBoards)
-  // Mock board data
 
   function onCreateNewBoardClicked() {
     setIsModalOpen(true)

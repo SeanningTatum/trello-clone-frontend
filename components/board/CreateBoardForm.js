@@ -1,3 +1,5 @@
+// @flow
+
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import {Row, Col, Button, Input} from 'reactstrap'
@@ -16,7 +18,11 @@ const COLORS = [
   'rgb(131, 140, 145)',
 ]
 
-export default function CreateBoardForm({onCreateBoardClicked}) {
+type Props = {
+  onCreateBoardClicked: (boardName: string, color: string) => void,
+}
+
+export default function CreateBoardForm(props: Props) {
   const [currentBg, setCurrentBg] = useState(COLORS[0])
   const {setValue: setBoardName, ...boardName} = useFormInput('')
 
@@ -24,8 +30,13 @@ export default function CreateBoardForm({onCreateBoardClicked}) {
     setCurrentBg(newColor)
   }
 
+  function onSubmitForm(event) {
+    event.preventDefault()
+    props.onCreateBoardClicked(boardName.value, currentBg)
+  }
+
   return (
-    <FormContainer>
+    <FormContainer onSubmit={onSubmitForm}>
       <Row className="mb-1" noGutters>
         <Col md={7} className="mr-3">
           <CreateBoardTile style={{backgroundColor: currentBg}}>
@@ -34,11 +45,9 @@ export default function CreateBoardForm({onCreateBoardClicked}) {
         </Col>
         <Col md={3}>
           <Row noGutters>
-            {COLORS.map((color, ndx) => (
-              <Col xs={4}>
-                <Tile style={{backgroundColor: color}} onClick={() => changeCurrentBg(color)}>
-                  {ndx + 1}
-                </Tile>
+            {COLORS.map(color => (
+              <Col xs={4} key={color}>
+                <Tile style={{backgroundColor: color}} onClick={() => changeCurrentBg(color)} />
               </Col>
             ))}
           </Row>
@@ -47,13 +56,13 @@ export default function CreateBoardForm({onCreateBoardClicked}) {
 
       <Button
         color="success"
-        type="button"
+        type="submit"
         style={{
           backgroundColor: boardName.value === '' && 'rgba(9, 45, 66, 1)',
           borderColor: boardName.value === '' && 'rgba(9, 45, 66, 1)',
         }}
         disabled={boardName.value === ''}
-        onClick={() => onCreateBoardClicked(boardName.value, currentBg)}
+        onClick={onSubmitForm}
       >
         <span>Create Board</span>
       </Button>
