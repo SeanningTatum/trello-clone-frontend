@@ -11,7 +11,7 @@ import {
 } from 'reactstrap'
 
 type Props = {
-  transparent: boolean,
+  transparent?: boolean,
 }
 
 export default function Navbar({transparent}: Props) {

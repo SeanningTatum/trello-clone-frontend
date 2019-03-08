@@ -1,3 +1,5 @@
+// @flow
+
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import {Container, Row, Col, Modal} from 'reactstrap'
@@ -5,9 +7,10 @@ import {Container, Row, Col, Modal} from 'reactstrap'
 import Navbar from '../components/dashboard/Navbar'
 import Sidenav from '../components/dashboard/Sidenav'
 import BoardList from '../components/dashboard/BoardList'
+import CreateBoardForm from '../components/board/CreateBoardForm'
 
 export default function Boards() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen: boolean, setIsModalOpen] = useState(false)
 
   function onCreateNewBoardClicked() {
     setIsModalOpen(true)
@@ -43,8 +46,9 @@ export default function Boards() {
           toggle={toggleModal}
           fade={false}
           contentClassName="modalContent"
+          backdropClassName="backdrop"
         >
-          <h5>Hello</h5>
+          <CreateBoardForm />
         </StyledModal>
       </Container>
 
@@ -52,6 +56,13 @@ export default function Boards() {
       <style jsx global>{`
         .modalContent {
           background-color: transparent;
+          width: fit-content;
+          margin: 0 auto;
+          border: none;
+        }
+
+        .modal-backdrop {
+          opacity: 0.75 !important;
         }
       `}</style>
     </div>
@@ -72,4 +83,5 @@ const CreateBoardBox = styled.div`
 const StyledModal = styled(Modal)`
   margin-top: 3.5rem;
   background-color: transparent;
+  color: white;
 `
