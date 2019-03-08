@@ -1,6 +1,11 @@
 import React from 'react'
+import {ThemeProvider} from 'styled-components'
 import App, {Container} from 'next/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
+
+const theme = {
+  primary: 'rgb(0, 121, 191)',
+}
 
 class MyApp extends App {
   static async getInitialProps({Component, ctx}) {
@@ -17,9 +22,11 @@ class MyApp extends App {
     const {Component, pageProps} = this.props
 
     return (
-      <Container>
-        <Component {...pageProps} />
-      </Container>
+      <ThemeProvider theme={theme}>
+        <Container>
+          <Component {...pageProps} />
+        </Container>
+      </ThemeProvider>
     )
   }
 }

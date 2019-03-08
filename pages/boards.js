@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import {Container, Row, Col} from 'reactstrap'
 
 import Navbar from '../components/dashboard/Navbar'
@@ -18,6 +19,11 @@ export default function Boards() {
             <h5>Personal Boards</h5>
             <Row className="justify-space-between">
               <BoardList boards={[1, 2, 3, 4, 5]} />
+              <Col md={3}>
+                <CreateBoardBox className="py-3 ">
+                  <p className="mb-0">Create new board...</p>
+                </CreateBoardBox>
+              </Col>
             </Row>
           </Col>
         </Row>
@@ -25,3 +31,14 @@ export default function Boards() {
     </div>
   )
 }
+
+const CreateBoardBox = styled.div`
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  colors: #6b808c;
+  background-color: rgba(9, 45, 66, 0.08);
+  cursor: pointer;
+`
