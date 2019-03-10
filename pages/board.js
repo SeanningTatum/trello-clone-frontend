@@ -12,10 +12,10 @@ import AddColumn from '../components/board/AddColumn'
 
 const sampleBoardData = {
   tasks: {
-    'task-1': {id: 'task-1', content: 'Take out the garbage 1'},
-    'task-2': {id: 'task-2', content: 'Imong mama'},
-    'task-3': {id: 'task-3', content: 'Lmao'},
-    'task-4': {id: 'task-4', content: 'Nani'},
+    'task-1': {id: 'task-1', content: 'Take out the garbage'},
+    'task-2': {id: 'task-2', content: 'Send this to turings'},
+    'task-3': {id: 'task-3', content: 'Create nodejs backend'},
+    'task-4': {id: 'task-4', content: 'Create GraphQL with Prisma Backend'},
   },
 
   columns: {

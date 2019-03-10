@@ -39,4 +39,5 @@ const TaskItem = styled.div`
   margin-bottom: 8px;
   background-color: ${props => (props.isDragging ? 'lightgreen' : 'white')};
   border-radius: 3px;
+  max-width: 250px;
 `
